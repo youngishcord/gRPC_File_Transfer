@@ -12,15 +12,21 @@ class MessageServicer(messages_pb2_grpc.MessageServicer):
     def CommandMessage(self, request, context):
         return super().CommandMessage(request, context)
 
-    def UploadFile(self, request, context):
+    def UploadFile(self, request_iterator, context):
         print('[x] File upload called')
-        success_reply = messages_pb2.FileSuccessReply()
+        arr = []
+        for request in request_iterator:
+            arr.append(request.data)
+
+        f = b''.join(arr)
 
         with open('./storage/01_Баукова.zip', 'wb') as file:
-            file.write(request.data)
-        
+            file.write(f)
+
+        success_reply = messages_pb2.FileSuccessReply()
         success_reply.success = 'SUCCESS'
         return success_reply
+
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

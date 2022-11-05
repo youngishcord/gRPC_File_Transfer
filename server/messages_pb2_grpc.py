@@ -19,9 +19,9 @@ class MessageStub(object):
                 request_serializer=messages__pb2.CommandsRequest.SerializeToString,
                 response_deserializer=messages__pb2.CommandsReply.FromString,
                 )
-        self.UploadFile = channel.unary_unary(
+        self.UploadFile = channel.stream_unary(
                 '/message.Message/UploadFile',
-                request_serializer=messages__pb2.FileUploadRequest.SerializeToString,
+                request_serializer=messages__pb2.Chunk.SerializeToString,
                 response_deserializer=messages__pb2.FileSuccessReply.FromString,
                 )
 
@@ -36,7 +36,7 @@ class MessageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def UploadFile(self, request, context):
+    def UploadFile(self, request_iterator, context):
         """Отправка файла на сервер и получение подтверждения о получении
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -51,9 +51,9 @@ def add_MessageServicer_to_server(servicer, server):
                     request_deserializer=messages__pb2.CommandsRequest.FromString,
                     response_serializer=messages__pb2.CommandsReply.SerializeToString,
             ),
-            'UploadFile': grpc.unary_unary_rpc_method_handler(
+            'UploadFile': grpc.stream_unary_rpc_method_handler(
                     servicer.UploadFile,
-                    request_deserializer=messages__pb2.FileUploadRequest.FromString,
+                    request_deserializer=messages__pb2.Chunk.FromString,
                     response_serializer=messages__pb2.FileSuccessReply.SerializeToString,
             ),
     }
@@ -84,7 +84,7 @@ class Message(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def UploadFile(request,
+    def UploadFile(request_iterator,
             target,
             options=(),
             channel_credentials=None,
@@ -94,8 +94,8 @@ class Message(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/message.Message/UploadFile',
-            messages__pb2.FileUploadRequest.SerializeToString,
+        return grpc.experimental.stream_unary(request_iterator, target, '/message.Message/UploadFile',
+            messages__pb2.Chunk.SerializeToString,
             messages__pb2.FileSuccessReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

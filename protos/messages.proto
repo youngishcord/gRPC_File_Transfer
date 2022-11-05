@@ -7,7 +7,7 @@ service Message {
     rpc CommandMessage (CommandsRequest) returns (CommandsReply);
 
     // Отправка файла на сервер и получение подтверждения о получении
-    rpc UploadFile (FileUploadRequest) returns (FileSuccessReply);
+    rpc UploadFile (stream Chunk) returns (FileSuccessReply);
 }
 
 message CommandsRequest {
@@ -19,9 +19,14 @@ message CommandsReply {
     string message = 1;
 }
 
-message FileUploadRequest {
+message Chunk {
     bytes data = 1;
 }
+
+// message FileUploadRequest {
+//     string filename = 1;
+//     repeated Chunk  = 2;
+// }
 
 message FileSuccessReply {
     string success = 1;
