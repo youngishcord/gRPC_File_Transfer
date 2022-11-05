@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package message;
+
+service Message {
+    // Отправка списка команд для взаимодействия с системой
+    rpc CommandMessage (CommandsRequest) returns (CommandsReply);
+
+    // Отправка файла на сервер и получение подтверждения о получении
+    rpc UploadFile (FileUploadRequest) returns (FileSuccessReply);
+}
+
+message CommandsRequest {
+    string filename = 1;
+    string md5 = 2;
+}
+
+message CommandsReply {
+    string message = 1;
+}
+
+message FileUploadRequest {
+    bytes data = 1;
+}
+
+message FileSuccessReply {
+    string success = 1;
+}
+

@@ -1,0 +1,1 @@
+IP_PORT = "localhost:50051"
