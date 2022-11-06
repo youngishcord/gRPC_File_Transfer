@@ -14,27 +14,15 @@ class MessageStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.CommandMessage = channel.unary_unary(
-                '/message.Message/CommandMessage',
-                request_serializer=messages__pb2.CommandsRequest.SerializeToString,
-                response_deserializer=messages__pb2.CommandsReply.FromString,
-                )
         self.UploadFile = channel.stream_unary(
                 '/message.Message/UploadFile',
-                request_serializer=messages__pb2.Chunk.SerializeToString,
+                request_serializer=messages__pb2.FileUploadRequest.SerializeToString,
                 response_deserializer=messages__pb2.FileSuccessReply.FromString,
                 )
 
 
 class MessageServicer(object):
     """Missing associated documentation comment in .proto file."""
-
-    def CommandMessage(self, request, context):
-        """Отправка списка команд для взаимодействия с системой
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
 
     def UploadFile(self, request_iterator, context):
         """Отправка файла на сервер и получение подтверждения о получении
@@ -46,14 +34,9 @@ class MessageServicer(object):
 
 def add_MessageServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'CommandMessage': grpc.unary_unary_rpc_method_handler(
-                    servicer.CommandMessage,
-                    request_deserializer=messages__pb2.CommandsRequest.FromString,
-                    response_serializer=messages__pb2.CommandsReply.SerializeToString,
-            ),
             'UploadFile': grpc.stream_unary_rpc_method_handler(
                     servicer.UploadFile,
-                    request_deserializer=messages__pb2.Chunk.FromString,
+                    request_deserializer=messages__pb2.FileUploadRequest.FromString,
                     response_serializer=messages__pb2.FileSuccessReply.SerializeToString,
             ),
     }
@@ -67,23 +50,6 @@ class Message(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def CommandMessage(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/message.Message/CommandMessage',
-            messages__pb2.CommandsRequest.SerializeToString,
-            messages__pb2.CommandsReply.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
     def UploadFile(request_iterator,
             target,
             options=(),
@@ -95,7 +61,7 @@ class Message(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.stream_unary(request_iterator, target, '/message.Message/UploadFile',
-            messages__pb2.Chunk.SerializeToString,
+            messages__pb2.FileUploadRequest.SerializeToString,
             messages__pb2.FileSuccessReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -3,32 +3,29 @@ syntax = "proto3";
 package message;
 
 service Message {
-    // Отправка списка команд для взаимодействия с системой
-    rpc CommandMessage (CommandsRequest) returns (CommandsReply);
-
     // Отправка файла на сервер и получение подтверждения о получении
-    rpc UploadFile (stream Chunk) returns (FileSuccessReply);
+    rpc UploadFile (stream FileUploadRequest) returns (FileSuccessReply);
 }
 
-message CommandsRequest {
-    string filename = 1;
+enum Status {
+    Unknown = 0;
+    Ok = 1;
+    Failed = 2;
+}
+
+message MetaData {
+    string file_name = 1;
     string md5 = 2;
+    bool backup = 3;
 }
 
-message CommandsReply {
-    string message = 1;
+message FileUploadRequest {
+    oneof request {
+        MetaData metadata = 1;
+        bytes chunk = 2;
+    }
 }
-
-message Chunk {
-    bytes data = 1;
-}
-
-// message FileUploadRequest {
-//     string filename = 1;
-//     repeated Chunk  = 2;
-// }
 
 message FileSuccessReply {
-    string success = 1;
+    Status status = 1;
 }
-

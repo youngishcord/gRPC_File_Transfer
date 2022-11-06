@@ -13,21 +13,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0emessages.proto\x12\x07message\"0\n\x0f\x43ommandsRequest\x12\x10\n\x08\x66ilename\x18\x01 \x01(\t\x12\x0b\n\x03md5\x18\x02 \x01(\t\" \n\rCommandsReply\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x15\n\x05\x43hunk\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\"#\n\x10\x46ileSuccessReply\x12\x0f\n\x07success\x18\x01 \x01(\t2\x88\x01\n\x07Message\x12\x42\n\x0e\x43ommandMessage\x12\x18.message.CommandsRequest\x1a\x16.message.CommandsReply\x12\x39\n\nUploadFile\x12\x0e.message.Chunk\x1a\x19.message.FileSuccessReply(\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0emessages.proto\x12\x07message\":\n\x08MetaData\x12\x11\n\tfile_name\x18\x01 \x01(\t\x12\x0b\n\x03md5\x18\x02 \x01(\t\x12\x0e\n\x06\x62\x61\x63kup\x18\x03 \x01(\x08\"V\n\x11\x46ileUploadRequest\x12%\n\x08metadata\x18\x01 \x01(\x0b\x32\x11.message.MetaDataH\x00\x12\x0f\n\x05\x63hunk\x18\x02 \x01(\x0cH\x00\x42\t\n\x07request\"3\n\x10\x46ileSuccessReply\x12\x1f\n\x06status\x18\x01 \x01(\x0e\x32\x0f.message.Status*)\n\x06Status\x12\x0b\n\x07Unknown\x10\x00\x12\x06\n\x02Ok\x10\x01\x12\n\n\x06\x46\x61iled\x10\x02\x32P\n\x07Message\x12\x45\n\nUploadFile\x12\x1a.message.FileUploadRequest\x1a\x19.message.FileSuccessReply(\x01\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'messages_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _COMMANDSREQUEST._serialized_start=27
-  _COMMANDSREQUEST._serialized_end=75
-  _COMMANDSREPLY._serialized_start=77
-  _COMMANDSREPLY._serialized_end=109
-  _CHUNK._serialized_start=111
-  _CHUNK._serialized_end=132
-  _FILESUCCESSREPLY._serialized_start=134
-  _FILESUCCESSREPLY._serialized_end=169
-  _MESSAGE._serialized_start=172
-  _MESSAGE._serialized_end=308
+  _STATUS._serialized_start=228
+  _STATUS._serialized_end=269
+  _METADATA._serialized_start=27
+  _METADATA._serialized_end=85
+  _FILEUPLOADREQUEST._serialized_start=87
+  _FILEUPLOADREQUEST._serialized_end=173
+  _FILESUCCESSREPLY._serialized_start=175
+  _FILESUCCESSREPLY._serialized_end=226
+  _MESSAGE._serialized_start=271
+  _MESSAGE._serialized_end=351
 # @@protoc_insertion_point(module_scope)

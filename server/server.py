@@ -1,4 +1,5 @@
 import grpc
+import hashlib
 import messages_pb2
 import messages_pb2_grpc
 from concurrent import futures
@@ -7,24 +8,38 @@ from config import (
 )
 
 
-class MessageServicer(messages_pb2_grpc.MessageServicer):
+def md5(path: str) -> str:
+    hash_md5 = hashlib.md5()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
 
-    def CommandMessage(self, request, context):
-        return super().CommandMessage(request, context)
+
+class MessageServicer(messages_pb2_grpc.MessageServicer):
 
     def UploadFile(self, request_iterator, context):
         print('[x] File upload called')
-        arr = []
+
+        data = bytearray()
         for request in request_iterator:
-            arr.append(request.data)
+            if request.metadata.md5:
+                file_path = f'./storage/{request.metadata.file_name}'
+                file_md5 = request.metadata.md5
+                backup = request.metadata.backup
+                continue
+            data.extend(request.chunk)
 
-        f = b''.join(arr)
-
-        with open('./storage/01_Баукова.zip', 'wb') as file:
-            file.write(f)
-
+        with open(file_path, 'wb') as file:
+            file.write(data)
+        
         success_reply = messages_pb2.FileSuccessReply()
-        success_reply.success = 'SUCCESS'
+        # print(file_md5)
+        # print(md5(file_path))
+        if md5(file_path) == file_md5:
+            success_reply.status = 1
+        else:
+            success_reply.status = 2
         return success_reply
 
 
