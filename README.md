@@ -1,6 +1,6 @@
 ﻿# gRPC_File_Transfer
 ---
-## This is a simple example of a program for transferring a large file via gps with pre-sending the filename and md5 sums.
+## This is a simple example of a program for transferring a large file via gRPC and protobuff with pre-sending the filename and md5 sums.
 
 Commands for creating protocol-scripts:
 
